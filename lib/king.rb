@@ -19,5 +19,5 @@ class King
   end
 end
 
-king = King.new([0, 4], 'b')
-p king.possible_moves([0, 4])
+# king = King.new([0, 4], 'b')
+# p king.possible_moves([0, 4])
