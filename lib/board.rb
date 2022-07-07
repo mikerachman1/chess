@@ -16,7 +16,7 @@ class Board
 
     bP1 = Pawn.new([1, 0], 'b'); bP2 = Pawn.new([1, 1], 'b'); bP3 = Pawn.new([1, 2], 'b'); bP4 = Pawn.new([1, 3], 'b')
     bP5 = Pawn.new([1, 4], 'b'); bP6 = Pawn.new([1, 5], 'b'); bP7 = Pawn.new([1, 6], 'b'); bP8 = Pawn.new([1, 7], 'b')
-    bR1 = Rook.new([7, 0], 'b'); bR2 = Rook.new([7, 7], 'b')
+    bR1 = Rook.new([0, 0], 'b'); bR2 = Rook.new([0, 7], 'b')
     bKn1 = Knight.new([0, 1], 'b'); bKn2 = Knight.new([0, 6], 'b')
     bB1 = Bishop.new([0, 2], 'b'); bB2 = Bishop.new([0, 5], 'b')
     bQ = Queen.new([0, 3], 'b'); bK = King.new([0, 4], 'b')

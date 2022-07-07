@@ -4,9 +4,10 @@ class Pawn
     def initialize(location, color)
       @location = location,
       @color = color
+      @first_move = true
+    end
+
+    def possible_moves (start, result = [])
     end
   end
 
-p1 = Pawn.new([0, 0], 'w')
-p p1.class == Pawn
-p p1.color == 'w'
