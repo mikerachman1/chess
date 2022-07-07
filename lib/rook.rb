@@ -21,5 +21,5 @@ class Rook
   end
 end
 
-rook = Rook.new([0, 0], 'b')
-p rook.possible_moves([4, 3])
+# rook = Rook.new([0, 0], 'b')
+# p rook.possible_moves([4, 3])
