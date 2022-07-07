@@ -3,16 +3,7 @@ require_relative 'knight'; require_relative 'bishop'; require_relative 'king'; r
 class Board
   attr_accessor :board
   def initialize
-    @board = [
-        [ nil, nil, nil, nil, nil, nil, nil, nil ],
-        [ nil, nil, nil, nil, nil, nil, nil, nil ],
-        [ nil, nil, nil, nil, nil, nil, nil, nil ],
-        [ nil, nil, nil, nil, nil, nil, nil, nil ],
-        [ nil, nil, nil, nil, nil, nil, nil, nil ],
-        [ nil, nil, nil, nil, nil, nil, nil, nil ],
-        [ nil, nil, nil, nil, nil, nil, nil, nil ],
-        [ nil, nil, nil, nil, nil, nil, nil, nil ]
-      ]
+    @board = [[],[],[],[],[],[],[],[]]
   end
 
   def start_game_pieces
@@ -32,6 +23,10 @@ class Board
 
     @board[0].push(bR1, bKn1, bB1, bQ, bK, bB2, bKn2, bR2)
     @board[1].push(bP1, bP2, bP3, bP4, bP5, bP6, bP7, bP8)
+    @board[2].push(nil, nil, nil, nil, nil, nil, nil, nil)
+    @board[3].push(nil, nil, nil, nil, nil, nil, nil, nil)
+    @board[4].push(nil, nil, nil, nil, nil, nil, nil, nil)
+    @board[5].push(nil, nil, nil, nil, nil, nil, nil, nil)
     @board[6].push(wP1, wP2, wP3, wP4, wP5, wP6, wP7, wP8)
     @board[7].push(wR1, wKn1, wB1, wQ, wK, wB2, wKn2, wR2)
   end
@@ -50,6 +45,30 @@ class Board
           print '■'
         elsif space.nil? && index.odd? && counter.odd?
           print '□'
+        elsif space.class == Pawn && space.color == 'w'
+          print '♙'
+        elsif space.class == Pawn && space.color == 'b'
+          print '♟'
+        elsif space.class == Rook && space.color == 'w'
+          print '♖'
+        elsif space.class == Rook && space.color == 'b'
+          print '♜'
+        elsif space.class == Knight && space.color == 'w'
+          print '♘'
+        elsif space.class == Knight && space.color == 'b'
+          print '♞'
+        elsif space.class == Bishop && space.color == 'w'
+          print '♗'
+        elsif space.class == Bishop && space.color == 'b'
+          print '♝'
+        elsif space.class == Queen && space.color == 'w'
+          print '♕'
+        elsif space.class == Queen && space.color == 'b'
+          print '♛'
+        elsif space.class == King && space.color == 'w'
+          print '♔'
+        elsif space.class == King && space.color == 'b'
+          print '♚'
         end
         print '|' if index < 7
       end
@@ -59,5 +78,5 @@ class Board
 end
 
 game = Board.new
-
+game.start_game_pieces
 game.display_board
