@@ -2,7 +2,7 @@ class Rook
   attr_accessor :location
   attr_reader :color
   def initialize(location, color)
-    @location = location,
+    @location = location
     @color = color
   end
 
@@ -19,7 +19,40 @@ class Rook
     end
     result
   end
+
+  def path(start, destination, path = [])
+    down = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]]
+    right = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]]
+    up = [[-1, 0], [-2, 0], [-3, 0], [-4, 0], [-5, 0], [-6, 0], [-7, 0]]
+    left = [[0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6], [0, -7]]
+
+    if down.include?(destination)
+      down.each do |position|
+        break if position == destination
+        path.push(position)
+      end
+    elsif right.include?(destination)
+      right.each do |position|
+        break if position == destination
+        path.push(position)
+      end
+    elsif up.include?(destination)
+      up.each do |position|
+        break if position == destination
+        path.push(position)
+      end
+    elsif left.include?(destination)
+      left.each do |position|
+        break if position == destination
+        path.push(position)
+      end
+    else
+      return 'ERROR move impossible'
+    end
+    path.unshift(start)
+    path.push(destination)
+  end
 end
 
-# rook = Rook.new([0, 0], 'b')
-# p rook.possible_moves([4, 3])
+rook = Rook.new([0, 0], 'b')
+p rook.path(rook.location, [0,6])
