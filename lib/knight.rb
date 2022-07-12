@@ -2,7 +2,7 @@ class Knight
   attr_accessor :location
   attr_reader :color
   def initialize(location, color)
-    @location = location,
+    @location = location
     @color = color
   end
 
@@ -13,5 +13,13 @@ class Knight
       result << destination if destination[0].between?(0, 7) && destination[1].between?(0, 7)
     end
     result
+  end
+
+  def path(start, destination, path = [])
+    possibilities = possible_moves(start)
+    return 'ERROR move impossible' unless possibilities.include?(destination)
+
+    path.unshift(start)
+    path.push(destination)
   end
 end
