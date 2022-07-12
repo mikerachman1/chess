@@ -2,7 +2,7 @@ class Bishop
   attr_accessor :location
   attr_reader :color
   def initialize(location, color)
-    @location = location,
+    @location = location
     @color = color
   end
 
@@ -19,7 +19,46 @@ class Bishop
     end
     result
   end
+
+  def path(start, destination, path = [])
+    possibilities = possible_moves(start)
+    return 'ERROR move impossible' unless possibilities.include?(destination)
+
+    down_right = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7]]
+    up_left = [[-1, -1], [-2, -2], [-3, -3], [-4, -4], [-5, -5], [-6, -6], [-7, -7]]
+    down_left = [[1, -1], [2, -2], [3,-3], [4, -4], [5, -5], [6, -6], [7, -7]]
+    up_right = [[-1, 1], [-2, 2], [-3,3], [-4, 4], [-5, 5], [-6, 6], [-7, 7]]
+
+    if start[0] < destination[0] && start[1] < destination[1] #down_right
+      down_right.each do |move|
+        position = [(start[0] + move[0]), (start[1] + move[1])]
+        break if position == destination
+        path.push(position)
+      end
+    elsif start[0] > destination[0] && start[1] > destination[1] #up_left
+      up_left.each do |move|
+        position = [(start[0] + move[0]), (start[1] + move[1])]
+        break if position == destination
+        path.push(position)
+      end
+    elsif start[0] < destination[0] && start[1] > destination[1] #down_left
+      down_left.each do |move|
+        position = [(start[0] + move[0]), (start[1] + move[1])]
+        break if position == destination
+        path.push(position)
+      end
+    elsif start[0] > destination[0] && start[1] < destination[1] #up_right
+      up_right.each do |move|
+        position = [(start[0] + move[0]), (start[1] + move[1])]
+        break if position == destination
+        path.push(position)
+      end
+    end
+
+    path.unshift(start)
+    path.push(destination)
+  end   
 end
 
 # bishop = Bishop.new([0, 2], 'b')
-# p bishop.possible_moves([0, 2])
+# p bishop.path([2,4], [5,4])
