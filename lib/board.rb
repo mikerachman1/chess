@@ -32,18 +32,16 @@ class Board
   end
 
   def display_board
-    counter = 0
     board.each_with_index do |row, index|
       puts "\n---------------"
-      counter = index
       row.each_with_index do |space, index|
-        if space.nil? && index.even? && counter.even?
+        if space.nil? && index.even? && index.even?
           print '□'
-        elsif space.nil? && index.odd? && counter.even?
+        elsif space.nil? && index.odd? && index.even?
           print '■'
-        elsif space.nil? && index.even? && counter.odd?
+        elsif space.nil? && index.even? && index.odd?
           print '■'
-        elsif space.nil? && index.odd? && counter.odd?
+        elsif space.nil? && index.odd? && index.odd?
           print '□'
         elsif space.class == Pawn && space.color == 'w'
           print '♙'
@@ -75,8 +73,30 @@ class Board
     end
   end
 
+  def move_possible?(start, destination)
+    selected_piece = board[(start[0])][(start[1])]
+    return false if selected_piece.nil? #if no piece at start arg
+
+    possibilities = selected_piece.possible_moves(start)
+    return false unless possibilities.include?(destination) #if destination is not a possiblity for piece
+
+    path = selected_piece.path(start, destination)
+    path.pop 
+    path.shift
+    path.each do |position|
+      board_position = board[(position[0])][(position[1])]
+      return false if board_position.nil? == false #if piece is in path
+    end
+    
+    board_destination = board[(destination[0])][(destination[1])]
+    return true if board_destination.nil?
+    board_destination.color == selected_piece.color ? false : true
+  end
+
 end
 
 game = Board.new
 game.start_game_pieces
-game.display_board
+
+# game.display_board
+p game.move_possible?([0, 0], [7, 0])
