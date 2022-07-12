@@ -21,38 +21,44 @@ class Rook
   end
 
   def path(start, destination, path = [])
+    possibilities = possible_moves(start)
+    return 'ERROR move impossible' unless possibilities.include?(destination)
+
     down = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0]]
     right = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]]
     up = [[-1, 0], [-2, 0], [-3, 0], [-4, 0], [-5, 0], [-6, 0], [-7, 0]]
     left = [[0, -1], [0, -2], [0, -3], [0, -4], [0, -5], [0, -6], [0, -7]]
 
-    if down.include?(destination)
-      down.each do |position|
+    if start[0] < destination[0] #down
+      down.each do |move|
+        position = [(start[0] + move[0]), (start[1] + move[1])]
         break if position == destination
         path.push(position)
       end
-    elsif right.include?(destination)
-      right.each do |position|
+    elsif start[1] < destination[1] #right
+      right.each do |move|
+        position = [(start[0] + move[0]), (start[1] + move[1])]
         break if position == destination
         path.push(position)
       end
-    elsif up.include?(destination)
-      up.each do |position|
+    elsif start[0] > destination[0] #up
+      up.each do |move|
+        position = [(start[0] + move[0]), (start[1] + move[1])]
         break if position == destination
         path.push(position)
       end
-    elsif left.include?(destination)
-      left.each do |position|
+    elsif start[1] > destination[1] #left
+      left.each do |move|
+        position = [(start[0] + move[0]), (start[1] + move[1])]
         break if position == destination
         path.push(position)
       end
-    else
-      return 'ERROR move impossible'
     end
+
     path.unshift(start)
     path.push(destination)
   end
 end
 
 rook = Rook.new([0, 0], 'b')
-p rook.path(rook.location, [0,6])
+p rook.path([5,1], [1,1])
