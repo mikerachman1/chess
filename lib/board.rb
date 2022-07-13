@@ -103,11 +103,29 @@ class Board
   def change_turn
     turn == 'White' ? @turn = 'Black' : @turn = 'White'
   end
+
+  def get_user_input
+    loop do
+      puts "\nIt is #{turn}'s turn\nEnter the row and column numbers (0-7).\nexample: 1 3"
+      selected_piece = gets.chomp.split(' ').map { |x| x.to_i }
+      
+      return selected_piece if selected_piece.length == 2 && selected_piece.all? { |x| x.between?(0, 7) } 
+      sleep(1)
+      puts "\nInput error! Try again"
+    end
+  end
+
+  def verify_input(input)
+    piece = board[(input[0])][(input[1])]
+    turn == 'White' ? color = 'w' : color = 'b'
+    raise 'Error' if piece.nil? || piece.color != color
+    input
+  end
+
 end
 
 game = Board.new
-
-# game.start_game_pieces
+game.start_game_pieces
 
 # game.display_board
 # puts
