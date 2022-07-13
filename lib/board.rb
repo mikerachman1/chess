@@ -93,10 +93,18 @@ class Board
     board_destination.color == selected_piece.color ? false : true
   end
 
+  def move_piece(start, destination) #only to be used after #move_possible? checks if good move
+    selected_piece = board[(start[0])][(start[1])]
+    board[(destination[0])][(destination[1])] = selected_piece
+    board[(start[0])][(start[1])] = nil
+  end
+
 end
 
 game = Board.new
-game.start_game_pieces
+# game.start_game_pieces
 
 # game.display_board
-p game.move_possible?([0, 0], [7, 0])
+# puts
+# game.move_piece([0, 1], [2, 0])
+# game.display_board
