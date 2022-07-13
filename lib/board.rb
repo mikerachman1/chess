@@ -1,9 +1,10 @@
 require_relative 'knight'; require_relative 'bishop'; require_relative 'king'; require_relative 'queen'; require_relative 'pawn'; require_relative 'rook'
 
 class Board
-  attr_accessor :board
+  attr_accessor :board, :turn
   def initialize
     @board = [[],[],[],[],[],[],[],[]]
+    @turn = 'White'
   end
 
   def start_game_pieces
@@ -99,9 +100,13 @@ class Board
     board[(start[0])][(start[1])] = nil
   end
 
+  def change_turn
+    turn == 'White' ? @turn = 'Black' : @turn = 'White'
+  end
 end
 
 game = Board.new
+
 # game.start_game_pieces
 
 # game.display_board
