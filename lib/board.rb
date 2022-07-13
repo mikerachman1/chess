@@ -107,25 +107,40 @@ class Board
   def get_user_input
     loop do
       puts "\nIt is #{turn}'s turn\nEnter the row and column numbers (0-7).\nexample: 1 3"
-      selected_piece = gets.chomp.split(' ').map { |x| x.to_i }
+      input = gets.chomp.split(' ').map { |x| x.to_i }
       
-      return selected_piece if selected_piece.length == 2 && selected_piece.all? { |x| x.between?(0, 7) } 
+      if input.length == 2 && input.all? { |x| x.between?(0, 7) } 
+        piece = board[(input[0])][(input[1])]
+        turn == 'White' ? color = 'w' : color = 'b'
+
+        return input if piece.nil? == false && piece.color == color
+      end
+      
       sleep(1)
-      puts "\nInput error! Try again"
+      puts "\nINPUT ERROR! Try again"
     end
   end
 
-  def verify_input(input)
-    piece = board[(input[0])][(input[1])]
-    turn == 'White' ? color = 'w' : color = 'b'
-    raise 'Error' if piece.nil? || piece.color != color
-    input
+  def play_game
+    puts "Lets Play Chess!\n\n Decide who will be which color, White goes first."
+    display_board
+    puts "\nFirst select your piece to move"
+    start = get_user_input
+    puts "\nNow select where to move"
+    destination = get_user_input
+    
+    if move_possible?(start, destination)
+      move_piece(start, destination)
+    else
+      puts "bad move honcho"
+    end
   end
 
 end
 
 game = Board.new
 game.start_game_pieces
+p game.get_user_input
 
 # game.display_board
 # puts
