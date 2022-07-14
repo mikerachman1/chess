@@ -122,6 +122,12 @@ class Board
     end
   end
 
+  def promotion?
+    return true if board[0].any? { |space| space.class == Pawn && space.color == 'w' } #If white pawn is in black endzone
+    return true if board[7].any? { |space| space.class == Pawn && space.color == 'b' } #If black pawn is in black endzone
+    false
+  end
+
   def play_game
     puts "Lets Play Chess!\n Decide who will be which color, White goes first."
     start_game_pieces
@@ -136,7 +142,7 @@ class Board
           move_piece(start, destination)
           break
         else
-          puts "Invalid move, Restarting your turn..."
+          puts "INVALID MOVE, Restarting your turn..."
           sleep(1)
         end
       end
@@ -148,4 +154,6 @@ class Board
 end
 
 game = Board.new
-game.play_game
+# game.play_game
+game.start_game_pieces
+p game.promotion?
