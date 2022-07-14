@@ -104,12 +104,13 @@ class Board
     turn == 'White' ? @turn = 'Black' : @turn = 'White'
   end
 
-  def get_user_input
+  def get_user_input(step)
     loop do
       puts "\nIt is #{turn}'s turn\nEnter the row and column numbers (0-7).\nexample: 1 3"
       input = gets.chomp.split(' ').map { |x| x.to_i }
       
       if input.length == 2 && input.all? { |x| x.between?(0, 7) } 
+        return input if step == 2
         piece = board[(input[0])][(input[1])]
         turn == 'White' ? color = 'w' : color = 'b'
 
@@ -122,27 +123,29 @@ class Board
   end
 
   def play_game
-    puts "Lets Play Chess!\n\n Decide who will be which color, White goes first."
-    display_board
-    puts "\nFirst select your piece to move"
-    start = get_user_input
-    puts "\nNow select where to move"
-    destination = get_user_input
-    
-    if move_possible?(start, destination)
-      move_piece(start, destination)
-    else
-      puts "bad move honcho"
+    puts "Lets Play Chess!\n Decide who will be which color, White goes first."
+    start_game_pieces
+    loop do
+      display_board
+      loop do 
+        puts "\nFirst select your piece to move"
+        start = get_user_input(1)
+        puts "\nNow select the destination"
+        destination = get_user_input(2)
+        if move_possible?(start, destination)
+          move_piece(start, destination)
+          break
+        else
+          puts "Invalid move, Restarting your turn..."
+          sleep(1)
+        end
+      end
+      change_turn
     end
+    puts 'GAME OVER'
   end
 
 end
 
 game = Board.new
-game.start_game_pieces
-p game.get_user_input
-
-# game.display_board
-# puts
-# game.move_piece([0, 1], [2, 0])
-# game.display_board
+game.play_game
