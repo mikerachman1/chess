@@ -1,9 +1,10 @@
 class King
-  attr_accessor :location
+  attr_accessor :location, :checked
   attr_reader :color
   def initialize(location, color)
     @location = location
     @color = color
+    @checked = false
   end
 
   def possible_moves (start, result = [])
