@@ -128,6 +128,14 @@ class Board
     false
   end
 
+  def promote(location)
+    if turn == 'White'
+      board[(location[0])][(location[1])] = Queen.new(location, 'w')
+    else
+      board[(location[0])][(location[1])] = Queen.new(location, 'b')
+    end
+  end
+
   def play_game
     puts "Lets Play Chess!\n Decide who will be which color, White goes first."
     start_game_pieces
@@ -140,6 +148,7 @@ class Board
         destination = get_user_input(2)
         if move_possible?(start, destination)
           move_piece(start, destination)
+          promote(destination) if promotion?
           break
         else
           puts "INVALID MOVE, Restarting your turn..."
@@ -154,6 +163,5 @@ class Board
 end
 
 game = Board.new
-# game.play_game
-game.start_game_pieces
-p game.promotion?
+game.play_game
+
