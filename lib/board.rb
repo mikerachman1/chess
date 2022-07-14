@@ -97,6 +97,7 @@ class Board
 
   def move_piece(start, destination) #only to be used after #move_possible? checks if good move
     selected_piece = board[(start[0])][(start[1])]
+    selected_piece.location = destination
     board[(destination[0])][(destination[1])] = selected_piece
     board[(start[0])][(start[1])] = nil
   end
@@ -146,8 +147,22 @@ class Board
     end
   end
 
-  def in_check?
-
+  def in_check?(king_location)
+    turn == 'White' ? opp_color = 'b' : opp_color = 'w'
+    king = board[(king_location[0])][(king_location[1])]
+    board.each do |row|
+      row.each do |space|
+        next if space.nil?
+        if space.color == opp_color
+          if move_possible?(space.location, king_location)
+            king.checked = true 
+            return true
+          end
+        end
+      end
+    end
+    king.checked = false
+    false
   end
 
   def play_game
@@ -180,5 +195,7 @@ end
 
 game = Board.new
 game.start_game_pieces
-p game.find_king
+game.move_piece([1, 0], [2, 0])
+game.display_board
+
 
