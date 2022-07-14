@@ -34,16 +34,16 @@ class Board
   end
 
   def display_board
-    board.each_with_index do |row, index|
+    board.each_with_index do |row, row_index|
       puts "\n---------------"
-      row.each_with_index do |space, index|
-        if space.nil? && index.even? && index.even?
+      row.each_with_index do |space, column_index|
+        if space.nil? && row_index.even? && column_index.even?
           print '□'
-        elsif space.nil? && index.odd? && index.even?
+        elsif space.nil? && row_index.odd? && column_index.even?
           print '■'
-        elsif space.nil? && index.even? && index.odd?
+        elsif space.nil? && row_index.even? && column_index.odd?
           print '■'
-        elsif space.nil? && index.odd? && index.odd?
+        elsif space.nil? && row_index.odd? && column_index.odd?
           print '□'
         elsif space.class == Pawn && space.color == 'w'
           print '♙'
@@ -70,7 +70,7 @@ class Board
         elsif space.class == King && space.color == 'b'
           print '♚'
         end
-        print '|' if index < 7
+        print '|' if column_index < 7
       end
     end
   end
@@ -194,8 +194,8 @@ class Board
 end
 
 game = Board.new
-game.start_game_pieces
-game.move_piece([1, 0], [2, 0])
-game.display_board
+# game.start_game_pieces
+
+# game.display_board
 
 
