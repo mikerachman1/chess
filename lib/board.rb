@@ -1,10 +1,11 @@
 require_relative 'knight'; require_relative 'bishop'; require_relative 'king'; require_relative 'queen'; require_relative 'pawn'; require_relative 'rook'
 
 class Board
-  attr_accessor :board, :turn
+  attr_accessor :board, :turn, :checkmate
   def initialize
     @board = [[],[],[],[],[],[],[],[]]
     @turn = 'White'
+    @checkmate = false
   end
 
   def start_game_pieces
@@ -136,10 +137,23 @@ class Board
     end
   end
 
+  def find_king
+    turn == 'White' ? t = 'w' : t = 'b'
+    board.each do |row|
+      row.each do |space|
+        return space.location if space.class == King && space.color == t
+      end
+    end
+  end
+
+  def in_check?
+
+  end
+
   def play_game
     puts "Lets Play Chess!\n Decide who will be which color, White goes first."
     start_game_pieces
-    loop do
+    until checkmate do
       display_board
       loop do 
         puts "\nFirst select your piece to move"
@@ -148,8 +162,9 @@ class Board
         destination = get_user_input(2)
         if move_possible?(start, destination)
           move_piece(start, destination)
-          promote(destination) if promotion?
-          break
+          promote(destination) if promotion? #move out of loop to before change_turn ?
+          #check & checkmate checks
+          break #out of players turn
         else
           puts "INVALID MOVE, Restarting your turn..."
           sleep(1)
@@ -157,11 +172,13 @@ class Board
       end
       change_turn
     end
+    display_board
     puts 'GAME OVER'
   end
 
 end
 
 game = Board.new
-game.play_game
+game.start_game_pieces
+p game.find_king
 
