@@ -97,6 +97,7 @@ class Board
 
   def move_piece(start, destination) #only to be used after #move_possible? checks if good move
     selected_piece = board[(start[0])][(start[1])]
+    selected_piece.first_move = false if selected_piece.class == Pawn
     selected_piece.location = destination
     board[(destination[0])][(destination[1])] = selected_piece
     board[(start[0])][(start[1])] = nil
@@ -194,8 +195,6 @@ class Board
 end
 
 game = Board.new
-# game.start_game_pieces
 
-# game.display_board
 
 
