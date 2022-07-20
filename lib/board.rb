@@ -23,14 +23,14 @@ class Board
     bB1 = Bishop.new([0, 2], 'b'); bB2 = Bishop.new([0, 5], 'b')
     bQ = Queen.new([0, 3], 'b'); bK = King.new([0, 4], 'b')
 
-    @board[0].push(bR1, bKn1, bB1, bQ, bK, bB2, bKn2, bR2)
+    @board[0].push(bR1, bKn1, bB1, nil, bK, bB2, bKn2, bR2)
     @board[1].push(bP1, bP2, bP3, bP4, bP5, bP6, bP7, bP8)
-    @board[2].push(nil, nil, nil, nil, nil, nil, nil, nil)
+    @board[2].push(nil, nil, wQ, nil, nil, nil, nil, nil)
     @board[3].push(nil, nil, nil, nil, nil, nil, nil, nil)
     @board[4].push(nil, nil, nil, nil, nil, nil, nil, nil)
-    @board[5].push(nil, nil, nil, nil, nil, nil, nil, nil)
+    @board[5].push(nil, nil, nil, nil, nil, nil, bQ, nil)
     @board[6].push(wP1, wP2, wP3, wP4, wP5, wP6, wP7, wP8)
-    @board[7].push(wR1, wKn1, wB1, wQ, wK, wB2, wKn2, wR2)
+    @board[7].push(wR1, wKn1, wB1, nil, wK, wB2, wKn2, wR2)
   end
 
   def display_board
@@ -139,6 +139,60 @@ class Board
     end
   end
 
+  def pawn_attack_possible_updater
+    board.each do |row|
+      row.each do |space|
+        if space.class == Pawn
+          if space.color == 'w'
+            pawn_location = space.location
+            left_attack_position = [(pawn_location[0] - 1), (pawn_location[1] - 1)]
+            right_attack_position = [(pawn_location[0] - 1), (pawn_location[1] + 1)]
+            
+            if left_attack_position[0].between?(0, 7) && left_attack_position[1].between?(0, 7)
+              left_attack_space = board[(left_attack_position[0])][(left_attack_position[1])]
+              if left_attack_space.nil?
+                space.attack_possible_left = false
+              elsif left_attack_space.color == 'b'
+                space.attack_possible_left = true
+              end
+            end
+            
+            if right_attack_position[0].between?(0, 7) && left_attack_position[1].between?(0, 7)
+              right_attack_space = board[(right_attack_position[0])][(right_attack_position[1])]
+              if right_attack_space.nil?
+                space.attack_possible_right = false
+              elsif right_attack_space.color == 'b'
+                space.attack_possible_right = true
+              end
+            end
+          else #black pawn
+            pawn_location = space.location
+            left_attack_position = [(pawn_location[0] + 1), (pawn_location[1] - 1)]
+            right_attack_position = [(pawn_location[0] + 1), (pawn_location[1] + 1)]
+
+            if left_attack_position[0].between?(0, 7) && left_attack_position[1].between?(0, 7)
+              left_attack_space = board[(left_attack_position[0])][(left_attack_position[1])]
+              if left_attack_space.nil?
+                space.attack_possible_left = false
+              elsif left_attack_space.color == 'w'
+                space.attack_possible_left = true
+              end
+            end
+            
+            if right_attack_position[0].between?(0, 7) && left_attack_position[1].between?(0, 7)
+              right_attack_space = board[(right_attack_position[0])][(right_attack_position[1])]
+              if right_attack_space.nil?
+                space.attack_possible_right = false
+              elsif right_attack_space.color == 'w'
+                space.attack_possible_right = true
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
   def find_king
     turn == 'White' ? t = 'w' : t = 'b'
     board.each do |row|
@@ -192,9 +246,27 @@ class Board
     puts 'GAME OVER'
   end
 
+  def pawn_test_method
+    board.each do |row|
+      row.each do |space|
+        if space.class == Pawn
+          print space.location
+          print space.color
+          print space.attack_possible_left
+          print space.attack_possible_right
+          puts
+        end
+      end
+    end
+  end
 end
 
 game = Board.new
+game.start_game_pieces
+
+game.pawn_attack_possible_updater
+game.pawn_test_method
+
 
 
 
