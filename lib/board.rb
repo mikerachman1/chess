@@ -210,13 +210,13 @@ class Board
         next if space.nil?
         if space.color == opp_color
           if move_possible?(space.location, king_location)
-            king.checked = true 
+            # king.checked = true 
             return true
           end
         end
       end
     end
-    king.checked = false
+    # king.checked = false
     false
   end
 
@@ -265,7 +265,7 @@ class Board
     #can checking piece be blocked?
     possible_counters = possible_counter_moves(king_location)
     checking_pieces = checking_pieces(king_location)
-    return false if checking_pieces.all? do |piece| #all or each?
+    return false if checking_pieces.all? do |piece| 
       piece_on_board = board[(piece[0])][(piece[1])]
       checking_path = piece_on_board.path(piece, king_location)
       checking_path.any? { |position| possible_counters.include?(position) }
@@ -308,8 +308,11 @@ game.start_game_pieces
 
 
 
-game.move_piece([7, 4], [4, 4])
-game.move_piece([0, 0], [4, 0])
+game.move_piece([6, 5], [5, 5])
+game.move_piece([6, 6], [4, 6])
+game.move_piece([1, 4], [2, 4])
+game.move_piece([0, 3], [4, 7])
 
-# game.display_board
-p game.possible_counter_moves([4, 4])
+game.display_board
+checking = game.checking_pieces([7, 4])
+p game.checkmate?([7, 4], checking)
