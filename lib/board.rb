@@ -236,25 +236,43 @@ class Board
     result
   end
 
-  def checkmate?(king_location)
+  def possible_counter_moves(king_location, result = [])
     king = board[(king_location[0])][(king_location[1])]
-    if king.checked == false
-      return false
-    else #king is checked
-      #can king be moved out of danger?
-      king_moves = king.possible_moves(king_location)
-      king_moves.each do |move|
-        if move_possible?(king_location, move)
-          return false if in_check?(move) == false
+    board.each do |row|
+      row.each do |space|
+        next if space.nil? || space.location == king_location || space.color != king.color
+        theory_moves = space.possible_moves(space.location)
+        theory_moves.each do |move|
+          result << move if move_possible?(space.location, move)
         end
       end
-     
-      
-      #can checking piece be captured?
-      #can checking piece be blocked?
-      
-      return true
     end
+    result.uniq
+  end
+
+  def checkmate?(king_location, checking_pieces)
+    king = board[(king_location[0])][(king_location[1])]
+    
+    # can king be moved out of danger?
+    king_moves = king.possible_moves(king_location)
+    king_moves.each do |move|
+      if move_possible?(king_location, move)
+        return false if in_check?(move) == false
+      end
+    end
+     
+    #can checking piece be captured?
+    #can checking piece be blocked?
+    possible_counters = possible_counter_moves(king_location)
+    checking_pieces = checking_pieces(king_location)
+    return false if checking_pieces.all? do |piece| #all or each?
+      piece_on_board = board[(piece[0])][(piece[1])]
+      checking_path = piece_on_board.path(piece, king_location)
+      checking_path.any? { |position| possible_counters.include?(position) }
+    end
+      
+    @checkmate = true
+    true
   end
 
   def play_game
@@ -293,7 +311,5 @@ game.start_game_pieces
 game.move_piece([7, 4], [4, 4])
 game.move_piece([0, 0], [4, 0])
 
-game.pawn_attack_possible_updater
-p game.in_check?(game.find_king)
-p game.checking_pieces(game.find_king)
-game.display_board
+# game.display_board
+p game.possible_counter_moves([4, 4])
