@@ -23,14 +23,14 @@ class Board
     bB1 = Bishop.new([0, 2], 'b'); bB2 = Bishop.new([0, 5], 'b')
     bQ = Queen.new([0, 3], 'b'); bK = King.new([0, 4], 'b')
 
-    @board[0].push(bR1, bKn1, bB1, nil, bK, bB2, bKn2, bR2)
+    @board[0].push(bR1, bKn1, bB1, bQ, bK, bB2, bKn2, bR2)
     @board[1].push(bP1, bP2, bP3, bP4, bP5, bP6, bP7, bP8)
-    @board[2].push(nil, nil, wQ, nil, nil, nil, nil, nil)
+    @board[2].push(nil, nil, nil, nil, nil, nil, nil, nil)
     @board[3].push(nil, nil, nil, nil, nil, nil, nil, nil)
     @board[4].push(nil, nil, nil, nil, nil, nil, nil, nil)
-    @board[5].push(nil, nil, nil, nil, nil, nil, bQ, nil)
+    @board[5].push(nil, nil, nil, nil, nil, nil, nil, nil)
     @board[6].push(wP1, wP2, wP3, wP4, wP5, wP6, wP7, wP8)
-    @board[7].push(wR1, wKn1, wB1, nil, wK, wB2, wKn2, wR2)
+    @board[7].push(wR1, wKn1, wB1, wQ, wK, wB2, wKn2, wR2)
   end
 
   def display_board
@@ -220,6 +220,43 @@ class Board
     false
   end
 
+  def checking_pieces(king_location, result = [])
+    turn == 'White' ? opp_color = 'b' : opp_color = 'w'
+    king = board[(king_location[0])][(king_location[1])]
+    board.each do |row|
+      row.each do |space|
+        next if space.nil?
+        if space.color == opp_color
+          if move_possible?(space.location, king_location)
+            result << space.location 
+          end
+        end
+      end
+    end
+    result
+  end
+
+  def checkmate?(king_location)
+    king = board[(king_location[0])][(king_location[1])]
+    if king.checked == false
+      return false
+    else #king is checked
+      #can king be moved out of danger?
+      king_moves = king.possible_moves(king_location)
+      king_moves.each do |move|
+        if move_possible?(king_location, move)
+          return false if in_check?(move) == false
+        end
+      end
+     
+      
+      #can checking piece be captured?
+      #can checking piece be blocked?
+      
+      return true
+    end
+  end
+
   def play_game
     puts "Lets Play Chess!\n Decide who will be which color, White goes first."
     start_game_pieces
@@ -246,27 +283,17 @@ class Board
     puts 'GAME OVER'
   end
 
-  def pawn_test_method
-    board.each do |row|
-      row.each do |space|
-        if space.class == Pawn
-          print space.location
-          print space.color
-          print space.attack_possible_left
-          print space.attack_possible_right
-          puts
-        end
-      end
-    end
-  end
 end
 
 game = Board.new
 game.start_game_pieces
 
+
+
+game.move_piece([7, 4], [4, 4])
+game.move_piece([0, 0], [4, 0])
+
 game.pawn_attack_possible_updater
-game.pawn_test_method
-
-
-
-
+p game.in_check?(game.find_king)
+p game.checking_pieces(game.find_king)
+game.display_board
