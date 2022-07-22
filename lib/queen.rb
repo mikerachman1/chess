@@ -91,5 +91,3 @@ class Queen
   end
 end
 
-# queen = Queen.new([0, 3], 'b')
-# p queen.path([4,4], [6,3])

@@ -60,5 +60,3 @@ class Bishop
   end   
 end
 
-# bishop = Bishop.new([0, 2], 'b')
-# p bishop.path([2,4], [5,4])

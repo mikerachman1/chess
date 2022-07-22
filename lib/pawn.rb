@@ -83,6 +83,3 @@ class Pawn
     end
   end
   
-  # pawn = Pawn.new([1, 0], 'w')
-  # pawn.attack_possible_left = true
-  # p pawn.path([6, 0], [])

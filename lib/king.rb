@@ -1,10 +1,9 @@
 class King
-  attr_accessor :location, :checked
+  attr_accessor :location
   attr_reader :color
   def initialize(location, color)
     @location = location
     @color = color
-    @checked = false
   end
 
   def possible_moves (start, result = [])
@@ -28,5 +27,3 @@ class King
   end
 end
 
-# king = King.new([0, 4], 'b')
-# p king.path([4, 4], [5,5])

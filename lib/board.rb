@@ -81,6 +81,7 @@ class Board
 
     possibilities = selected_piece.possible_moves(start)
     return false unless possibilities.include?(destination) #if destination is not a possiblity for piece
+    
 
     path = selected_piece.path(start, destination)
     path.pop 
@@ -91,8 +92,20 @@ class Board
     end
     
     board_destination = board[(destination[0])][(destination[1])]
-    return true if board_destination.nil?
-    board_destination.color == selected_piece.color ? false : true
+    return true if board_destination.nil? 
+    return false if board_destination.color == selected_piece.color
+    
+    if selected_piece.class == Pawn
+      if selected_piece.color == 'w'
+        return false if destination[0] == (start[0] - 1) && destination[1] == start[1] 
+        return false if destination[0] == (start[0] - 2) && destination[1] == start[1]
+      else #black pawn
+        return false if destination[0] == (start[0] + 1) && destination[1] == start[1]
+        return false if destination[0] == (start[0] + 2) && destination[1] == start[1]
+      end
+    end
+      
+    true
   end
 
   def move_piece(start, destination) #only to be used after #move_possible? checks if good move
@@ -194,39 +207,37 @@ class Board
   end
 
   def find_king
-    turn == 'White' ? t = 'w' : t = 'b'
+    turn == 'White' ? opp_color = 'b' : opp_color = 'w'
     board.each do |row|
       row.each do |space|
-        return space.location if space.class == King && space.color == t
+        return space.location if space.class == King && space.color == opp_color
       end
     end
   end
 
   def in_check?(king_location)
-    turn == 'White' ? opp_color = 'b' : opp_color = 'w'
+    turn == 'White' ? turn_color = 'w' : turn_color = 'b'
     king = board[(king_location[0])][(king_location[1])]
     board.each do |row|
       row.each do |space|
         next if space.nil?
-        if space.color == opp_color
+        if space.color == turn_color
           if move_possible?(space.location, king_location)
-            # king.checked = true 
             return true
           end
         end
       end
     end
-    # king.checked = false
     false
   end
 
   def checking_pieces(king_location, result = [])
-    turn == 'White' ? opp_color = 'b' : opp_color = 'w'
+    turn == 'White' ? turn_color = 'w' : turn_color = 'b'
     king = board[(king_location[0])][(king_location[1])]
     board.each do |row|
       row.each do |space|
         next if space.nil?
-        if space.color == opp_color
+        if space.color == turn_color
           if move_possible?(space.location, king_location)
             result << space.location 
           end
@@ -280,39 +291,30 @@ class Board
     start_game_pieces
     until checkmate do
       display_board
-      loop do 
+      loop do #turn loop
         puts "\nFirst select your piece to move"
         start = get_user_input(1)
         puts "\nNow select the destination"
         destination = get_user_input(2)
         if move_possible?(start, destination)
           move_piece(start, destination)
-          promote(destination) if promotion? #move out of loop to before change_turn ?
-          #check & checkmate checks
+          promote(destination) if promotion? 
           break #out of players turn
-        else
+        else #bad destination
           puts "INVALID MOVE, Restarting your turn..."
           sleep(1)
         end
       end
+      #post turn checks 
+      pawn_attack_possible_updater()
+      checkmate?(find_king, checking_pieces(find_king)) if in_check?(find_king)
       change_turn
     end
     display_board
-    puts 'GAME OVER'
+    puts "\n\nCHECKMATE\nGAMEOVER"
   end
 
 end
 
 game = Board.new
-game.start_game_pieces
-
-
-
-game.move_piece([6, 5], [5, 5])
-game.move_piece([6, 6], [4, 6])
-game.move_piece([1, 4], [2, 4])
-game.move_piece([0, 3], [4, 7])
-
-game.display_board
-checking = game.checking_pieces([7, 4])
-p game.checkmate?([7, 4], checking)
+game.play_game
